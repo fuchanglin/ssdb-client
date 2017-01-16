@@ -10,6 +10,7 @@ const DefferedCmd = require('./deferred');
 const assert = require('assert');
 
 const ClientState = {
+  Pending      : Symbol('Pending'), // inited not try to connect yet
   Disconnected : Symbol('Disconnected'),
   Connecting   : Symbol('Connecting'),
   Connected    : Symbol('Connected'),
@@ -39,7 +40,7 @@ class SSDBClient extends EventEmitter {
     }, configs);
 
     this.parser = new Parser();
-    this.state = ClientState.Disconnected;
+    this.state = ClientState.Pending;
     this.cmdQueue = [];
     this._registerCommands(Commands);
   }
@@ -48,7 +49,9 @@ class SSDBClient extends EventEmitter {
   // Interfaces
   //----------------------------------------------------------------------
   connect() {
-    if (this.state !== ClientState.Disconnected && this.state !== ClientState.Reconnecting) return;
+    if (this.state !== ClientState.Pending
+      && this.state !== ClientState.Disconnected
+      && this.state !== ClientState.Reconnecting) return;
 
     this.socket = new net.Socket();
     // configure the socket
@@ -296,6 +299,9 @@ class SSDBClient extends EventEmitter {
       theCmdTask.state = DefferedCmd.States.Executed; // wait for response
       this.execute(theCmdTask.cmd, theCmdTask.args);
     } else {
+      if (this.state === ClientState.Pending) {
+        this.connect(); // first try
+      }
       theCmdTask.state = DefferedCmd.States.Queued; // pending for execution
     }
   }
