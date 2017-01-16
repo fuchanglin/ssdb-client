@@ -1,14 +1,4 @@
-# ssdb-client 
-Yet another ssdb client, target for Node v6 Lts, 
-
-- ES6/Promise based implementation
-- Auto reconnect the failed connection
-- Pooling enabled
-- Init commit, more to come
-
-## License
-
-(The MIT License)
+MIT License
 
 Copyright (c) 2017 Chuck Fu <changlin.fu@gmail.com>
 
@@ -29,4 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
