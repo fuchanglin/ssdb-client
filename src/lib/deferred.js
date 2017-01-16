@@ -1,5 +1,5 @@
 'use strict';
-const debug = require('debug')('lidou:ssdb');
+const debug = require('debug')('ssdb-client:ssdb');
 const _ = require('lodash');
 const { Errors } = require('./defs');
 
