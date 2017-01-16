@@ -262,11 +262,8 @@ class SSDBClient extends EventEmitter {
     this._socketReset();
     if (this.configs.autoReconnect) {
       if (this.state !== ClientState.Reconnecting) {
-        this._socketReset();
         this.reconnect();
       }
-    } else {
-      this.destory();
     }
   }
   onSocketEnd() {
