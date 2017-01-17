@@ -141,13 +141,15 @@ class SSDBClient extends EventEmitter {
   }
 
   destory() {
-    debug('Socket [Destroying]');
+    debug('Socket [Destroyed]');
     this.resetReconnectTimer();
     this.state = ClientState.Destroying;
-    this.socket.destroySoon();
-    this.socket.removeAllListeners();
-    this.socket.unref();
-    this.socket = null;
+    if (this.socket) {
+      this.socket.destroySoon();
+      this.socket.removeAllListeners();
+      this.socket.unref();
+      this.socket = null;
+    }
     this.parser.reset();
     this.emit('end');
   }
