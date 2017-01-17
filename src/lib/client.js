@@ -219,7 +219,7 @@ class SSDBClient extends EventEmitter {
         if (Parser.parseCmdResponse(Commands['auth'], data) === true) {
           this.ready();
         } else {
-          throw new Errors.SSDBFatalError('Authentication failed, please check your pass');
+          this.on('error', new Errors.SSDBFatalError('Authentication failed, please check your pass'));
         }
       }
       // Ready
@@ -298,6 +298,8 @@ class SSDBClient extends EventEmitter {
     } else {
       if (this.state === ClientState.Pending) {
         this.connect(); // first try
+      } else if (!this.configs.autoReconnect && this.state === ClientState.Disconnected) {
+        this.connect();
       }
       theCmdTask.state = DefferedCmd.States.Queued; // pending for execution
     }
