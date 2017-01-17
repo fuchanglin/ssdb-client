@@ -6,7 +6,7 @@ const CR = '\r'.charCodeAt(0);
 const LF = '\n'.charCodeAt(0);
 
 const KVListToObject = function(list) {
-  let ret = Object.create(null);
+  let ret = {};
   if (typeof list === 'undefined') return ret;
   for(let idx = 0; idx < list.length; idx += 2) {
     ret[ list[idx] ] = list[idx + 1];
