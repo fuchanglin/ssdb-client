@@ -1,6 +1,6 @@
 {
   "name": "ssdb-client",
-  "version": "0.9.10",
+  "version": "0.9.12",
   "description": "Yet another ssdb client, target for Node v6 Lts",
   "main": "src/index.js",
   "private": false,

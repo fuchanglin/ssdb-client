@@ -90,6 +90,7 @@ class SSDBClient extends EventEmitter {
         }
         return ret;
       }, []);
+      this.resetReconnectTimer();
       this.reconnectState = Object.assign({
         timer: null,
         attempts : 0
@@ -141,7 +142,7 @@ class SSDBClient extends EventEmitter {
   }
 
   destory() {
-    debug('Socket [Destroyed]');
+    debug(`Socket [Destroyed] from ${this.state.toString()}`);
     this.resetReconnectTimer();
     this.state = ClientState.Destroying;
     if (this.socket) {
@@ -175,7 +176,7 @@ class SSDBClient extends EventEmitter {
   // event listeners
   //----------------------------------------------------------------------
   onSocketConnect() {
-    debug('Socket [Connected]');
+    debug(`Socket [Connected] from ${this.state.toString()}`);
     this.resetReconnectTimer();
     this.state = ClientState.Connected;
     this.emit('connected');
@@ -248,7 +249,7 @@ class SSDBClient extends EventEmitter {
     });
   }
   onSocketError(error) {
-    debug(`Socket [Error] #${error.code}#, ${this.configs.autoReconnect ? 'try reconnect' : 'destroying'} ...`);
+    debug(`Socket [Error] #${error.code}# from ${this.state.toString()} ${this.configs.autoReconnect ? 'try reconnect' : 'destroying'} ...`);
     // not pending reconnecting...
     if (this.state !== ClientState.Reconnecting) {
       this.state = ClientState.Disconnected;
@@ -260,7 +261,7 @@ class SSDBClient extends EventEmitter {
     }
   }
   onSocketTimeout() {
-    debug(`Socket [Timeout] ${this.configs.autoReconnect ? 'try reconnect' : 'destroying'} ...`);
+    debug(`Socket [Timeout][Config=${this.configs.timeout}] from ${this.state.toString()} ${this.configs.autoReconnect ? 'try reconnect' : 'destroying'} ...`);
     this._socketReset();
     if (this.configs.autoReconnect) {
       if (this.state !== ClientState.Reconnecting) {
@@ -269,13 +270,13 @@ class SSDBClient extends EventEmitter {
     }
   }
   onSocketEnd() {
-    debug('Socket [End]');
+    debug(`Socket [End] from ${this.state.toString()}`);
   }
   onSocketDrain() {
-    debug('Socket [Drain]');
+    debug(`Socket [Drain] from ${this.state.toString()}`);
   }
   onSocketClose(hadError) {
-    debug(`Socket [Close] reason ${hadError ? 'ERROR': 'IDLE'}`);
+    debug(`Socket [Close] from ${this.state.toString()} reason ${hadError ? 'ERROR': 'IDLE'}`);
   }
 
   //----------------------------------------------------------------------

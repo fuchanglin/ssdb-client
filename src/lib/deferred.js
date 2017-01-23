@@ -25,13 +25,13 @@ class DeferredTask {
 
   resolve(body) {
     this.clearTimer();
-    debug(`DeferredTask[${this.cmd}] resolved: ${ body ? _.toString(body) : '[NULL]' }`);
+    debug(`DeferredTask[${this.cmd}] resolved: ${ body ? ( _.isObjectLike(body) ?  JSON.stringify(body, null, 2) : _.toString(body)) : '[NULL]' }`);
     this.resolveFunc( body );
   }
 
   reject(reason) {
     this.clearTimer();
-    debug(`DeferredTask[${this.cmd}] reject: ${reason ? _.toString(reason) : '[Unknown]'}`);
+    debug(`DeferredTask[${this.cmd}] reject: ${reason ?  ( _.isObjectLike(reason) ?  JSON.stringify(reason, null, 2) : _.toString(reason)) : '[Unknown]'}`);
     this.rejectFunc( reason );
   }
 
